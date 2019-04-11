@@ -1,0 +1,234 @@
+from tkinter import ttk
+import tkinter as tk
+from tkinter import *
+
+FONT_NEW= ("Verdana", 12)
+NORM_FONT= ("Verdana", 10)
+
+firstname=[]
+lastname=[]
+username=[]
+emailid=[]
+phno=[]
+password=[]
+
+class HotelManagement(tk.Tk):
+    
+    def __init__(self, *args, **kwargs):
+        
+        tk.Tk.__init__(self, *args, **kwargs)
+        container = tk.Frame(self)
+
+        container.pack(side="top", fill="both", expand = True)
+
+        container.grid_rowconfigure(0, weight=1)
+        container.grid_columnconfigure(0, weight=1)
+        
+        
+
+        self.frames = {}
+
+        menubar = tk.Menu(container)
+        filemenu = tk.Menu(menubar, tearoff=0)
+        filemenu.add_command(label="About",
+                             command=self.about_popup)
+        filemenu.add_separator()
+        filemenu.add_command(label="Exit", command=self.destroy)
+        menubar.add_cascade(label="Menu", menu=filemenu)
+
+        tk.Tk.config(self, menu=menubar)
+
+        self.frames = {}
+
+        for F in (RegWindow, LoginWindow, SuccessWindow, UnsuccessWindow):
+
+            frame = F(container, self)
+
+            self.frames[F] = frame
+
+            frame.grid(row=0, column=0, sticky="nsew")
+
+        self.show_frame(RegWindow)
+        
+    def about_popup(self):
+        popup = tk.Tk()
+        popup.wm_title("About")
+        label = tk.Label(popup, text="Badi mushkil se ho gaya xD")
+        label.pack(side="top", fill="x", pady=10)
+        B1 = tk.Button(popup, text="Okay", command = popup.destroy)
+        B1.pack()
+        popup.geometry("220x100+590+220")
+        popup.mainloop()
+
+    def show_frame(self, cont):
+
+        frame = self.frames[cont]
+        frame.tkraise()
+
+class RegWindow(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="REGISTRATION PAGE", font = FONT_NEW)
+        label.place(x=100, y=10)
+        self.controller = controller
+        
+        self.fname = Label(self, text="First Name")
+        self.fname.place(x=20, y=50)
+        self.lname = Label(self, text="Last Name")
+        self.lname.place(x=20, y=80)
+        self.uname = Label(self, text="Userame")
+        self.uname.place(x=20, y=110)
+        self.email = Label(self, text="Email ID")
+        self.email.place(x=20, y=140)
+        self.phone = Label(self, text="Phone No.")
+        self.phone.place(x=20, y=170)
+        self.pwd = Label(self, text="Password")
+        self.pwd.place(x=20, y=200)
+        
+        self.fn = Entry(self, width=30)
+        self.fn.place(x=110, y=50)
+        self.ln = Entry(self, width=30)
+        self.ln.place(x=110, y=80)
+        self.un = Entry(self, width=30)
+        self.un.place(x=110, y=110)
+        self.e_id = Entry(self, width=30)
+        self.e_id.place(x=110, y=140)
+        self.phn = Entry(self, width=30)
+        self.phn.place(x=110, y=170)
+        self.psswd = Entry(self, width=30, show="*")
+        self.psswd.place(x=110, y=200)
+        
+        self.button1 = ttk.Button(self, text="Submit", width=7, command=self.submit)
+        self.button1.place(x=110, y=250)
+        self.button2 = ttk.Button(self, text="Reset", width=6, command=self.clear_text)
+        self.button2.place(x=190, y=250)
+        
+        
+    def clear_text(self):
+        self.fn.delete(0, 'end')
+        self.ln.delete(0, 'end')
+        self.un.delete(0, 'end')
+        self.e_id.delete(0, 'end')
+        self.phn.delete(0, 'end')
+        self.psswd.delete(0, 'end')
+        
+    def submit(self):
+        self.FirstName = self.fn.get()
+        self.LastName = self.ln.get()
+        self.UserName = self.un.get()
+        self.EmailID = self.e_id.get()
+        self.PhoneNo = self.phn.get()
+        self.Password = self.psswd.get()
+        
+        if self.FirstName == '' or self.LastName == '' or self.UserName == '' or self.EmailID == '' or self.PhoneNo == '' or self.Password == '':
+            popup = tk.Tk()
+            popup.wm_title("Error")
+            label = tk.Label(popup, text="Kindly fill all the details")
+            label.pack(side="top", fill="x", pady=10)
+            B1 = tk.Button(popup, text="Okay", command = popup.destroy)
+            B1.pack()
+            popup.geometry("200x100+600+220")
+            popup.mainloop()
+            
+            #tkinter.messagebox.showinfo("Error", "Kindly fill all the details")
+            
+        else:
+            firstname.append(self.FirstName)
+            lastname.append(self.LastName)
+            username.append(self.UserName)
+            emailid.append(self.EmailID)
+            phno.append(self.PhoneNo)
+            password.append(self.Password)
+            
+            self.controller.show_frame(LoginWindow)
+
+class LoginWindow(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="LOGIN", font = FONT_NEW)
+        label.place(x=100, y=10)
+        self.controller = controller
+        
+        self.u_name = Label(self, text="Username")
+        self.u_name.place(x=20, y=50)
+        self.pass_word = Label(self, text="Password")
+        self.pass_word.place(x=20, y=80)
+        
+        self.uname_en = Entry(self, width=30)
+        self.uname_en.place(x=110, y=50)
+        self.password_en = Entry(self, width=30, show="*")
+        self.password_en.place(x=110, y=80)
+        
+        self.button1 = ttk.Button(self, text="Submit", width=7, command=self.submit2)
+        self.button1.place(x=30, y=120)
+        self.button2 = ttk.Button(self, text="Reset", width=6, command=self.clear_text2)
+        self.button2.place(x=110, y=120)
+        self.button3 = ttk.Button(self, text="Go to Registration Window", width=24, 
+                              command=lambda: controller.show_frame(RegWindow))            
+        self.button3.place(x=190, y=120)
+        
+    def clear_text2(self):
+        self.uname_en.delete(0, 'end')
+        self.password_en.delete(0, 'end')
+
+    def submit2(self):
+
+        self.User_Name = self.uname_en.get()
+        self.Pass_Word = self.password_en.get()
+
+        if (self.User_Name == '' or self.Pass_Word == ''):
+            popup = tk.Tk()
+            popup.wm_title("Error")
+            label = tk.Label(popup, text="Kindly fill all the details")
+            label.pack(side="top", fill="x", pady=10)
+            B1 = tk.Button(popup, text="Okay", command = popup.destroy)
+            B1.pack()
+            popup.geometry("200x100+600+220")
+            popup.mainloop()
+
+        else:
+            
+            for key in username:
+                if key == self.User_Name:
+                    y=username.index(key)
+                    if password[y] == self.Pass_Word:
+                        self.controller.show_frame(SuccessWindow)
+                    else:
+                        self.controller.show_frame(UnsuccessWindow)
+                else:
+                    
+                    self.controller.show_frame(UnsuccessWindow)
+                        
+class SuccessWindow(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="SUCCESSFUL LOGIN", font = FONT_NEW)
+        label.place(x=100, y=10)
+        self.controller = controller
+        
+        self.u_name = Label(self, text="Welcome to Booking.com")
+        self.u_name.place(x=112, y=50)
+        
+        #self.button1 = ttk.Button(self, text="Okay", width=6, command=lambda: controller.show_frame(SuccessWindow))
+        #self.button1.place(x=150, y=90)
+
+class UnsuccessWindow(tk.Frame):
+
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self,parent)
+        label = tk.Label(self, text="UNSUCCESSFUL LOGIN", font = FONT_NEW)
+        label.place(x=100, y=10)
+        self.controller = controller
+        
+        self.u_name = Label(self, text="Kindly check your credentials")
+        self.u_name.place(x=115, y=50)
+        
+        self.button1 = ttk.Button(self, text="Back to Login", width=12, command=lambda: controller.show_frame(LoginWindow))
+        self.button1.place(x=150, y=90)
+
+app = HotelManagement()
+app.geometry("400x300+500+100")
+app.mainloop()
